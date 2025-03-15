@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatterBot Demo</title>
+    <style>
+        #chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            overflow: hidden;
+            transition: transform 0.3s ease-out;
+            transform: translateY(100%);
+        }
+        #chatbot.open {
+            transform: translateY(0);
+        }
+        #chatbot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #eee;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #chatbot-header h3 {
+            margin: 0;
+        }
+        #chatbot-header button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+        #chatbot-header button:focus {
+            outline: none;
+        }
+        #chatbox {
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+        #chatform {
+            display: flex;
+            margin-top: auto;
+        }
+        #userinput {
+            flex-grow: 1;
+            padding: 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        #userinput:focus {
+            outline: none;
+        }
+        #sendbtn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #sendbtn:hover {
+            background-color: #3e8e41;
+        }
+        
+    </style>
+    <style>
+    #chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    
+    #chatbot.minimized {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    
+    #chatbox {
+        height: 300px;
+        overflow-y: scroll;
+        padding: 10px;
+    }
+    
+    #chatbox div {
+        margin-bottom: 10px;
+    }
+    
+    #chatform {
+        display: flex;
+        margin-top: 10px;
+    }
+    
+    #userinput {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+    
+    #sendbtn {
+        width: 80px;
+    }
+    
+    #minimizebtn,
+    #maximizebtn,
+    #closebtn {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        width: 30px;
+        height: 30px;
+        margin: 10px;
+        background-color: #ddd;
+        border-radius: 50%;
+        color: aqua;
+    }
+    body {
+        overflow-x: hidden;
+    }
+</style>
+</head>
+<body>
+    <div id="chatbot" class="open">
+        <div id="chatbot-header">
+            <h3>Chatbot</h3>
+            <div>
+                <button id="minimize-btn" title="Minimize">-</button>
+                <button id="maximize-btn" title="Maximize">+</button>
+                <button id="close-btn" title="Close">&times;</button>
+            </div>
+        </div>
+        <div id="chatbox">
+            <p>Welcome to the chatbot! Type something to start the conversation.</p>
+        </div>
+        <form id="chatform">
+            <input type="text" id="userinput" placeholder="Type here...">
+            <button id="sendbtn" type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        var usr_id = document.getElementById("username").value;
+        var chatbot = document.getElementById("chatbot");
+        var chatbox = document.getElementById("chatbox");
+        var chatform = document.getElementById("chatform");
+        var userinput = document.getElementById("userinput");
+        var sendbtn = document.getElementById("sendbtn");
+        var minimizebtn = document.getElementById("minimize-btn");
+        var maximizebtn = document.getElementById("maximize-btn");
+        var closebtn = document.getElementById("close-btn");
+        chatbot.classList.remove("open");
+
+        document.addEventListener("DOMContentLoaded", function() {
+            chatbot.addEventListener("click", function() {
+                chatbot.classList.add("open");
+            });
+            minimizebtn.addEventListener("click", function(event) {
+                event.stopPropagation();
+                chatbot.classList.remove("open");
+            });
+            maximizebtn.addEventListener("click", function(event) {
+                event.stopPropagation();
+                chatbot.classList.add("open");
+            });
+            closebtn.addEventListener("click", function(event) {
+                event.stopPropagation();
+                chatbot.remove();
+            });
+
+            chatform.addEventListener("submit", function(event) {
+                event.preventDefault();
+                var usermsg = usr_id+": " + userinput.value.trim();
+                if (usermsg === "") {
+                    return;
+                }
+                appendMessage("user", usermsg);
+                fetch("/chatbot/get-response/?" + new URLSearchParams({
+                    usr_msg: usermsg,
+                    user_id: usr_id,}))
+                    .then(response => response.json())
+                    .then(result => appendMessage("bot", result.Response))
+                    .catch(error => console.error(error));
+                userinput.value = "";
+            });
+        });
+
+        function appendMessage(sender, message) {
+            var messageelem = document.createElement("div");
+            messageelem.className = sender;
+            messageelem.textContent = message;
+            chatbox.appendChild(messageelem);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>

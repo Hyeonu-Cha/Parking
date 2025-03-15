@@ -1,0 +1,297 @@
+{% comment %} {% extends 'navbar.html' %}  {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Message with Provider</title>
+      <script>
+          function goBack() {
+            window.location.href = "/";
+          }
+      </script>
+          <button onclick="goBack()" class="redirect-button">Home</button>
+        <style>
+
+            .container {
+                width: 80%;
+                margin: auto;
+                margin-top: 2rem;
+                letter-spacing: 0.5px;
+                height: 80%;
+            }
+            .received-msg {
+                display: inline-block;
+                padding: 0 0 0 10px;
+                vertical-align: top;
+                width: 40%;
+            }
+            .received-msg-inbox {
+                width: 57%;
+            }
+            .outgoing-chats {
+                overflow: hidden;
+                margin: 26px 20px;
+            }
+            
+            .outgoing-chats-msg p {
+                background-color: #3a12ff;
+                background-image: linear-gradient(45deg, #ee087f 0%, #DD2A7B 25%, #9858ac 50%, #8134AF 75%, #515BD4 100%);
+                color: #fff;
+                border-radius: 10px;
+                font-size: 14px;
+                color: #fff;
+                padding: 5px 10px 5px 12px;
+                width: 100%;
+                padding: 1rem;
+                box-shadow: rgb(0 0 0 / 25%) 0px 2px 5px 2px;
+            }
+            .outgoing-chats-msg {
+                    float: right;
+                    width: 100%;
+                }
+            .received-msg-inbox p {
+                background: #efefef none repeat scroll 0 0;
+                border-radius: 10px;
+                color: #646464;
+                font-size: 14px;
+                margin-left: 1rem;
+                padding: 1rem;
+                width: 100%;
+                box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px;
+            }
+                p {
+                overflow-wrap: break-word;
+            }
+            .time {
+                color: #777;
+                display: block;
+                font-size: 12px;
+                margin: 8px 0 0;
+            }
+            
+            .h1 {text-align: center;}
+            .container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+                padding: 20px;
+                background-color: #f5f5f5;
+                font-family: Arial, sans-serif;
+            }
+            .outgoing-chats {
+                overflow: hidden;
+                margin: 26px 20px;
+            }
+            
+            .outgoing-chats-msg p {
+                background-color: #3a12ff;
+                background-image: linear-gradient(45deg, #ee087f 0%, #DD2A7B 25%, #9858ac 50%, #8134AF 75%, #515BD4 100%);
+                color: #fff;
+                border-radius: 10px;
+                font-size: 14px;
+                color: #fff;
+                padding: 5px 10px 5px 12px;
+                width: 100%;
+                padding: 1rem;
+                box-shadow: rgb(0 0 0 / 25%) 0px 2px 5px 2px;
+            }
+            .outgoing-chats-msg {
+                    float: right;
+                    width: 46%;
+                }
+                .chat-box {
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    height: 400px;
+                    overflow-y: scroll;
+                  }
+                  
+                  .message {
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 10px;
+                  }
+                  
+                  .sent {
+                    margin-left: auto;
+                    background-color: #DCF8C6;
+                    color: #000000;
+                    border-radius: 15px;
+                    padding: 10px;
+                    max-width: 60%;
+                    word-wrap: break-word;
+                  }
+                  
+                  .received {
+                    background-color: #F2F2F2;
+                    border-radius: 10px;
+                    padding: 10px;
+                  }
+                  
+                  .message-info {
+                    font-size: 12px;
+                    margin-top: 5px;
+                    display: flex;
+                    justify-content: space-between;
+                  }
+                  
+                  .message-sender {
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                  }
+                  
+                  .message-time {
+                    color: #888;
+                  }
+                  #send-message-form {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 20px;
+                    max-width: 500px;
+                    width: 80%;
+                  }
+                  
+                  #send-message-form input[type="text"] {
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px;
+                    margin-right: 10px;
+                    flex-grow: 1;
+                  }
+                  
+                  #send-message-form button[type="submit"] {
+                    background-color: #dc3545;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px 20px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                  }
+                  
+                  #send-message-form button[type="submit"]:hover {
+                    background-color: #c82333;
+                  }
+                  
+                  #send-message-form button[type="submit"]:focus {
+                    outline: none;
+                  }
+                  .report-btn {
+                    border: none;
+                    background-color: red;
+                    color: white;
+                    border-radius: 50%;
+                    width: 10px;
+                    height: 10px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: right;
+                    cursor: pointer;
+                  }
+                  
+                  .report-btn:hover {
+                    opacity: 0.8;
+                  }
+                  
+                  .report-btn:focus {
+                    outline: none;
+                  }
+                  
+                  
+        </style>
+    </head>
+<body>
+{% block content %}
+  <h1>Message</h1>
+  <ul>
+  <div class="chat-box">
+    {% with message.sender.username as receiver %}
+    {%if messages%}
+      {%if messages|length != 1%}
+        {% for message in messages %}
+            {% if user.username == message.sender.username or user.username == message.receiver%}
+            
+                {% if user.username == message.receiver %}
+
+                <script language="JavaScript">
+                  var receiver = "{{ message.sender.username|escapejs }}";
+              </script>
+                {% if message.text != ""%}
+                <div class="message received">
+                <div class="message-content">{{ message.text }}</div>
+                <div class="message-info">
+                  <span class="message-sender">{{ message.sender }}</span>
+                  
+                  <span class="message-time">{{ message.created_at }}</span>
+                  
+                </div>
+                {%endif%}
+                <form id="report" method="POST" action="{% url 'report_msg' %}">
+                    {% csrf_token %}
+                <button type ="submit" class="report-btn" name="report-btn" id = "report-btn" value = "{{message.id}}">
+                    <i class="fas fa-exclamation-circle"></i></button>
+                  </button>
+                </form>
+                </div>
+                {%else%}
+                <script language="JavaScript">
+                  var receiver = "{{ message.receiver|escapejs }}";
+              </script>
+                <div class="message sent">
+                    <div class="message-content">{{ message.text }}</div>
+                    <div class="message-info">
+                      <span class="message-sender">{{ message.sender }}</span>
+                      <span class="message-time">{{ message.created_at }}</span>
+                      
+                    </div>
+                   
+                </div>
+                {% endif %} 
+            {% endif %}
+            
+        {% endfor %}
+        {%else%}
+        <p>There is no Message.</p>
+          {% if user.username == messages.0.sender.username%}
+
+          <script language="JavaScript">
+
+            var receiver = "{{ messages.0.receiver|escapejs }}";
+        </script>
+
+        {%endif%}
+        {%endif%}
+    {% else %}
+        <p>There is no Message.</p>
+    {% endif %}
+  </ul> 
+</div>
+
+    <div class = container>
+    <form id="send-message-form" method="POST" action="{% url 'send_msg' %}">
+        
+        {% csrf_token %}
+        
+        <input type="text" name="text">
+        <button type="submit" class="btn btn-danger" name="receiver-btn" id="receiver-btn">Send</button>
+
+    </form> 
+</div>
+    <script language="JavaScript">
+        document.getElementById("receiver-btn").value = receiver;
+    </script> 
+
+
+  <script>
+  </script>
+    {% endwith %}
+{% endblock %}
+
+
+
+</body>
+</html> 

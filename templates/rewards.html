@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rewards Points</title>
+        <script>
+            function goBack() {
+                window.location.href = "/";
+            }
+        </script>
+        <button onclick="goBack()" class="redirect-button">Home</button>
+        <style>
+            h1 {text-align: center;}
+            .container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+                padding: 20px;
+                background-color: #f5f5f5;
+                font-family: Arial, sans-serif;
+            }
+            .request-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 10px;
+                padding: 20px;
+                background-color: white;
+                box-shadow: 0px 0px 10px #ccc;
+                width: 300px;
+                min-height: 200px;
+            }
+            .request-card h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .request-card p {
+                font-size: 16px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .redirect-button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 20px;
+                position: fixed;
+                top: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+    <body>
+        {% if user.is_authenticated %}
+        {% if Rewards %}
+        <p><h1>Your have {{Total}} reward points</h1></p>
+        {% for reward in Rewards %}
+        <div class="container">
+            <div class="request-card">
+                <h3>{{reward.description}}</h3>
+                <p>Points: {{reward.value}}</p>
+                <p>Date: {{reward.created_at}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p><h1>Sorry you have no rewards.</h1></p>
+        {% endif %}
+        {% endif %}
+    </body>
+</html>

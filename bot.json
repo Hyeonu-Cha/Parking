@@ -1,0 +1,57 @@
+[
+  {
+    "response_type": "greeting",
+    "user_input": ["hello", "hi", "hey"],
+    "bot_response": "Hey there!",
+    "required_words": []
+  },
+  {
+    "response_type": "greeting",
+    "user_input": ["see you", "goodbye", "bye"],
+    "bot_response": "See you later!",
+    "required_words": []
+  },
+  {
+    "response_type": "greeting",
+    "user_input": ["nice", "to", "meet", "you"],
+    "bot_response": "The pleasure is all mine!",
+    "required_words": ["nice", "meet", "you"]
+  },
+  {
+    "response_type": "question",
+    "user_input": ["show", "me", "my", "bookings","see" ],
+    "bot_response": "Start by typing: 'How to learn coding' on Google.",
+    "required_words": ["my", "bookings"]
+  },
+  {
+    "response_type": "question",
+    "user_input": ["refund", "how", "can", "I", "get"],
+    "bot_response": "We don't offer refunds.",
+    "required_words": ["refund", "i"]
+  },
+  {
+    "response_type": "question",
+    "user_input": ["how", "are", "you"],
+    "bot_response": "I'm great! Thanks for asking.",
+    "required_words": ["how", "are", "you"]
+  },
+  {
+    "response_type": "question",
+    "user_input": ["I", "would", "like", "to","cancel", "my", "bookings" ],
+    "bot_response": "Certainly, which booking would you like to cancel?",
+    "required_words": ["cancel","my", "booking"]
+  },
+  {
+    "response_type": "question",
+    "user_input": ["I", "would", "like", "to","cancel", "my", "Parking"],
+    "bot_response": "Certainly, which booking would you like to cancel?",
+    "required_words": ["parking"]
+  },
+  {
+    "response_type": ["question"],
+    "user_input": ["thanks","thank","you"],
+    "bot_response": "No problem!",
+    "required_words": []
+  }
+
+]

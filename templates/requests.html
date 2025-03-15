@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Notifications</title>
+	<script>
+	function goBack() {
+		window.location.href = "/";
+	}
+	</script>
+    <style>
+	h1 {text-align: center;}
+      .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        padding: 20px;
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+      }
+      .request-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 10px #ccc;
+        width: 300px;
+        min-height: 400px;
+      }
+      .request-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 20px;
+      }
+      .request-card h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .request-card p {
+        font-size: 16px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .request-card button {
+        font-size: 16px;
+        padding: 10px;
+        margin-top: auto;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .request-card button:hover {
+        background-color: #3e8e41;
+      }
+      .request-card .reject-button {
+        background-color: #f44336;
+      }
+      .request-card .reject-button:hover {
+        background-color: #9b1c1c;
+      }
+	  .redirect-button {
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 20px;
+		position: fixed;
+		top: 0;
+		right: 0;
+	}
+    </style>
+	<button onclick="goBack()" class="redirect-button">Home</button>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    {%if Requests%}
+    <p><h1>Pending Requests</h1></p>
+    {%endif%}
+    <div class="container">
+      {% for req in Requests%}
+      <div class="request-card">
+        <img src="/media/{{req.property_image}}" alt="Property 1" />
+        <h3>Parking {{req.id}}</h3>
+        <p>Requested by: {{req.userid}}</p>
+        <p>Total price ($AUD): {{req.booking_cost}}</p>
+        <p>Start time: {{req.start_time}}</p>
+        <p>End time: {{req.end_time}}</p>
+        <form method="post">
+          {%csrf_token%}
+          <button name="aprv" value="{{req.id}}">Approve</button>
+          <button name="rej" class="reject-button" value="{{req.id}}">
+            Reject
+          </button>
+        </form>
+      </div>
+	</div>
+  <div>
+      {%endfor%}
+	{%if Payments%}
+	<p><h1>Pending Payment</h1></p>
+	{%endif%}
+  </div>
+    <div class="container">
+      {% for pay in Payments%}
+      <div class="request-card">
+        <img src="{{req.property_image.url}}" alt="Property 1" />
+        <h3>Payment {{pay.id}}</h3>
+        <h4>Payment to: {{pay.providerid}}</h4>
+        <p>Total Cost ($AUD): {{pay.booking_cost}}</p>
+        <p>Start time: {{pay.start_time}}</p>
+        <p>End time: {{pay.end_time}}</p>
+
+        <form method="post" action="/stripe_checkout/">
+          {% csrf_token %}
+          <!--<input type="hidden" name="booking_cost" value="{{ pay.booking_cost }}">-->
+         
+          <input type="hidden" name="request_id" value="{{pay.id}}">
+          <button type="submit" name="request_id" value="{{pay.id}}">Make Payment</button>
+        </form>
+
+        <form method="post">
+          {%csrf_token%}
+          <button name="pmt" value="{{pay.id}}">Make Payment</button>
+        </form>
+        <button name="cancel" class="reject-button" onclick="location.href='deleted'">Cancel</button>
+    </div>
+	{%endfor%}
+  
+	{%endif%}
+  </body>
+</html>

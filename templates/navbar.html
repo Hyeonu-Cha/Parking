@@ -1,0 +1,53 @@
+<!--Navbar-->
+<style>
+.my-button {
+  top: 20px;
+  margin-right: 20px;
+  padding: 10px;
+  background-color: #428bca;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.navbar-lable {
+  white-space: nowrap;
+}
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        {% if user.is_authenticated %}
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+          <input type="hidden" value="{{user.username}}" name="username" id="username">
+        </li>
+        <div class = "navbar-label">
+        <form method="POST" action="{% url 'get_dm'%}" style="display: inline;">
+          {% csrf_token %}
+             <input type="hidden" name="receiver" id="receiver" value="{{user.username}}">
+             <button type="submit" class = "my-button">Messages</button>
+         </form>
+        <button class="my-button" onclick="location.href='create-listing'">Create Listing</button>
+        <button class="my-button" onclick="location.href='my-requests'">My Requests</button>
+        <button class="my-button" onclick="location.href='my-bookings'">My Bookings</button>
+        <button class="my-button" onclick="location.href='reward-points'">Rewards</button>
+        </div>
+
+        {% else %}
+  
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+  
+        {% endif %}
+
+      </ul>
+    </div>
+  </nav>
+  

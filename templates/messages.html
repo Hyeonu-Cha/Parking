@@ -1,0 +1,103 @@
+{% comment %} {% extends 'navbar.html' %} {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Messages with Provider</title>
+      <script>
+          function goBack() {
+            window.location.href = "/";
+          }
+      </script>
+          <button onclick="goBack()" class="redirect-button">Home</button>
+        <style>
+          form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+          }
+            .h1 {text-align: center;}
+            .container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+                padding: 20px;
+                background-color: #f5f5f5;
+                font-family: Arial, sans-serif;
+            }
+            .request-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 10px;
+                padding: 20px;
+                background-color: white;
+                box-shadow: 0px 0px 10px #ccc;
+                width: 300px;
+                min-height: 400px;
+            }
+            .request-card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin-bottom: 20px;
+            }
+            .request-card h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .request-card p {
+                font-size: 16px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .redirect-button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 20px;
+                position: fixed;
+                top: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+<body>
+
+{% block content %}
+  <h1>Chatroom</h1>
+  {% if messages %}
+    <ul>
+    {% regroup messages by sender.username as senders %}
+      {% for sender in senders %} 
+       {% if user.username != sender.grouper%}
+        <form method="POST" action="{% url 'send_dm'%}">
+          {% csrf_token %}
+          <li>{{ sender.grouper }}   <button type="submit" class="btn btn-danger" name="receiver" value="{{ sender.grouper }}">Reply</button> </li>
+        </form>
+       {%endif%}
+      {% endfor %} 
+    </ul>
+  {% else %}
+    <p>There are no messages.</p>
+  {% endif %}
+{% endblock %}
+
+
+</body>
+</html> 

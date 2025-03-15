@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <style>
+        .sidebar {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      background-color: #f1f1f1;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    /* Filter section styling */
+    .filter-section {
+      margin-right: 20px;
+    }
+
+    .filter-section h3 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    /* Checkbox styling */
+    .checkbox-group {
+      margin-bottom: 5px;
+    }
+
+    .checkbox-group label {
+      display: block;
+    }
+
+    /* Slider styling */
+    .slider {
+      width: 80%;
+    }
+
+    .slider-value {
+      display: inline-block;
+      width: 40px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    /* Button styling */
+    .submit-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+      background-color: #3e8e41;
+    }
+
+    .delete-button {
+      background-color: #dc2323;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .delete-button:hover {
+      background-color: #b01c1c;
+    }
+      .my-button {
+        top: 20px;
+        margin-right: 20px;
+        padding: 10px;
+        background-color: #428bca;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    #header {
+      background-color: #333;
+      color: rgb(255, 255, 255);
+      padding: 20px;
+      text-align: center;
+    }
+
+    #property-list {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .property {
+      background-color: rgb(255, 255, 255);
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .property-info {
+      flex: 1;
+      margin-right: 20px;
+    }
+
+    .property-info h2 {
+      margin-top: 0;
+    }
+
+    .property-info p {
+      margin: 0;
+    }
+
+    .property-image {
+      flex: 1;
+    }
+
+    .property-image img {
+      width: 100%;
+      height: auto;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      background-color: green;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .popup-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 20px;
+    }
+    
+    .close-btn {
+      background-color: white;
+      border: none;
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
+      padding: 20px;
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    
+  </style>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+  </head>
+ <body>
+
+    {% include 'navbar.html' %}
+    {% include 'chatbot.html' %}
+
+    {% block content %}
+
+    {% endblock %} 
+  </body>
+  
+</head>
+<body>
+  {% if req_sent %}
+    <div class="popup">
+        <p>Your request has been sent!</p>
+        <button class="close-btn">Close</button>
+    </div>
+    <script>
+        // Get the popup element
+        var popup = document.querySelector('.popup');
+
+        // Get the close button
+        var closeBtn = document.querySelector('.close-btn');
+
+        // Hide the popup when the close button is clicked
+        closeBtn.addEventListener('click', function() {
+            popup.style.display = 'none';
+        });
+
+        // Hide the popup after 5 seconds
+        setTimeout(function() {
+            popup.style.display = 'none';
+        }, 5000);
+    </script>
+  {% endif %}
+  {% if invalid_start_date %}
+  <div class="popup">
+      <p>Start date of the booking cannot be prior to current date</p>
+      <button class="close-btn">Close</button>
+  </div>
+  <script>
+      // Get the popup element
+      var popup = document.querySelector('.popup');
+
+      // Get the close button
+      var closeBtn = document.querySelector('.close-btn');
+
+      // Hide the popup when the close button is clicked
+      closeBtn.addEventListener('click', function() {
+          popup.style.display = 'none';
+      });
+
+      // Hide the popup after 5 seconds
+      setTimeout(function() {
+          popup.style.display = 'none';
+      }, 5000);
+  </script>
+{% endif %}
+{% if invalid_end_date %}
+<div class="popup">
+    <p>End date of the booking cannot be prior to the selected start date</p>
+    <button class="close-btn">Close</button>
+</div>
+<script>
+    // Get the popup element
+    var popup = document.querySelector('.popup');
+
+    // Get the close button
+    var closeBtn = document.querySelector('.close-btn');
+
+    // Hide the popup when the close button is clicked
+    closeBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+    });
+
+    // Hide the popup after 5 seconds
+    setTimeout(function() {
+        popup.style.display = 'none';
+    }, 5000);
+</script>
+{% endif %}
+
+  <form method="post" action="my-requests/">
+  {%csrf_token%}
+  {% if user.is_authenticated %}
+
+  <div id="header">
+    <h1>Parking Properties</h1>
+      <input type="submit" class="my-button" onclick="location.href='my-requests'" value="My Requests"></button>
+  </div>
+  {%endif%}
+  </form>
+  <form method="post">
+  {%csrf_token%}
+  {% if user.is_authenticated %}
+  <div class="sidebar">
+    <div class="filter-section">
+      <h3>Price</h3>
+      <input type="range" class="slider" id="price-slider" name="price-slider" min="0" max="300" value="150">
+      <div>
+        <span class="slider-value">$0</span>
+        <span class="slider-value">$150</span>
+        <span class="slider-value">$300+</span>
+      </div>
+    </div>
+    <div class="filter-section">
+      <h3>Suburb</h3>
+      <input type="text" name="suburb-input" id="suburb-input"placeholder="Enter suburb...">
+    </div>
+    <div class="filter-section">
+      <h3>Options</h3>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="ev-checkbox" name="ev-checkbox">EV Charging</label>
+        <label><input type="checkbox" id="handicap-checkbox" name="handicap-checkbox">Handicap Parking</label>
+      </div>
+    </div>
+    <div>
+    <button type="submit" class="submit-button" id="filter-req" name="filter-req" value="True">Filter</button>
+    <button type="submit" class="submit-button"name="reset-filt" id="reset-filt" value="True">Reset Filter</button>
+    </div>
+  </div>
+  </form>
+
+
+    {%for list in listings%}
+    <li class="property">
+          <div class="property-info">
+            <h2>{{list.street}}</h2>
+            <p>Provider Username: {{list.providerid}}</p>
+            <p>Suburb: {{list.suburb}}</p>
+            <p>Street: {{list.street}}</p>
+            <p>State: {{list.state}}</p>
+            <p>Postal Code: {{list.postal}}</p>
+            <p>Parking Align: {{list.parking_allign}}</p>
+            <p>Parking Type: {{list.parking_type}}</p>
+            <p>Parking Description: {{list.description}}</p>
+            <p>EV: {{list.ev}}</p>
+            <p>Handicap Accessible: {{list.handicap}}</p>
+            <p>Weekday Pricing: {{list.price_weekday}}</p>
+            <p>Weekend Pricing: {{list.price_weekend}}</p>
+            <p>Current Status: {{list.status}}</p>
+        
+            <br><br>
+            
+            <form method="post">
+              {%csrf_token%}
+             
+              {% if user.username != list.providerid.username %}
+              <form method="post"  style="display: inline;">
+                {% csrf_token %}
+                <label for="start-datetime">Start Date and Time:</label>
+                <input type="datetime-local" id="start-datetime" name="start_datetime" required>
+                <br>
+                <label for="end-datetime">End Date and Time:</label>
+                <input type="datetime-local" id="end-datetime" name="end_datetime" required>
+                <br>
+                <button type="submit" class="submit-button" name="calc-req" id="calc-req" value="{{list.id}}">Calculate</button>
+                {% if calc_for_id == list.id %}
+                <p>Booking Cost for this parking space</p>
+                <p>From: {{start_date}} To: {{end_date}}</p>
+                <p>($AUD): {{booking_cost}}</p>
+                {% endif %}
+                <br><br>
+                <button type="submit" class="submit-button" name="send-req" id="send-req" value="{{list.id}}">Send Request</button>
+              </form>
+              <br>
+              {% if user.username != list.providerid.username %}
+              <form method="POST" action="{% url 'send_dm'%}" style="display: inline;">
+              {% csrf_token %} 
+                  <button type="submit" name="receiver" id="receiver" value="{{list.providerid}}" class = "submit-button">Send messages</button>
+              </form>
+              {%endif%}
+              {%endif%}
+            </form>
+          </div>
+          <div class="property-image">
+            {% if list.property_image %}
+              <img src="{{list.property_image.url}}" alt="Parking Property Image"  style="width:100%;max-width:700px">
+            {%else%}
+              <img src="https://via.placeholder.com/400x300" alt="Parking Property Image">
+            {%endif%}
+          </div>
+          <div>
+            {%if user == list.providerid %}
+            <form method="POST" action="{% url 'edit-listing'%}">
+              {% csrf_token %}
+              <button type="submit" class="delete-button" name="property-id" value="{{list.id}}">Edit Listing</button>
+            </form>
+            <br>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="delete-button" name="property-id" value="{{list.id}}">Delete Listing</button>
+            </form>
+
+            {% elif user.is_staff %}
+
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="delete-button" name="property-id" value="{{list.id}}">Delete Listing</button>
+            </form>
+            <br>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="delete-button" name="provider-id" value="{{list.providerid}}">Ban Provider</button>
+            </form>
+
+            {%endif%}
+          </div>
+
+        </li>
+    {%endfor%}
+    <div id="content">
+      <ul id="property-list">
+        
+      </ul>
+    </div>
+
+{%endif%}
+  <script>
+    // Get the slider and output elements
+    var slider = document.getElementById("price-slider");
+    var output1 = document.getElementsByClassName("slider-value")[0];
+    var output2 = document.getElementsByClassName("slider-value")[1];
+    var output3 = document.getElementsByClassName("slider-value")[2];
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+      if (this.value == 0) {
+        output1.innerHTML = "$0";
+        output2.innerHTML = "$0";
+        output3.innerHTML = "$300+";
+      } else if (this.value == 300) {
+        output1.innerHTML = "$0";
+        output2.innerHTML = "$300";
+        output3.innerHTML = "$300+";
+      } else {
+        output1.innerHTML = "$0";
+        output2.innerHTML = "$" + this.value;
+        output3.innerHTML = "$300+";
+      }
+    };
+  </script>
+</body>
+</html>
